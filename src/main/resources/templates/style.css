@@ -9,41 +9,45 @@ h1 {
     height: 600px;
     width: 500px;
     margin: 0 auto;
+    border: solid palegreen 10px;
+    position: relative;
 }
-/*#glass {*/
-/*    background-color: purple;*/
-/*    opacity: 20%;*/
-/*    height: 400px;*/
-/*    width: 500px;*/
-/*    position: relative;*/
-/*}*/
 
-/*#door-exit {*/
-/*    background-color: black;*/
-/*    height: 90px;*/
-/*    width: 120px;*/
-/*    margin-left: 30px;*/
-/*    margin-top: 75px;*/
-/*}*/
+#glass {
+    background-color: purple;
+    opacity: 20%;
+    height: 400px;
+    width: 500px;
+}
+
+#door-exit {
+    background-color: black;
+    height: 90px;
+    width: 120px;
+    margin-left: 30px;
+    margin-top: 75px;
+}
 
 #claw {
     background-color: aqua;
     height: 130px;
     width: 30px;
-    position: relative;
-    left: 65px;
+    position: absolute;
+    left: 70px;
     transform: translate(0,0);
     will-change: transform;
 
 }
 
-/*#toy {*/
-/*    background-color: darkblue;*/
-/*    height: 40px;*/
-/*    width: 40px;*/
-/*    position: absolute;*/
-/*    top: 230px;*/
-/*    left: 300px;*/
+#toy {
+    background-color: darkblue;
+    height: 40px;
+    width: 40px;
+    position: absolute;
+    transform: translate(300px,340px);
+    will-change: transform;
 
-/*}*/
+}
+
+
 

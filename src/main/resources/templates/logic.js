@@ -1,10 +1,15 @@
 const claw = document.getElementById("claw");
+const toy = document.getElementById("toy");
 let currentX = 0;
 let isDropping= false;
 let isAnimating = false;
 let dropY = 0;
+let isResetting = false;
 
 function animate(direction){
+    if(isResetting) return;
+    if(isDropping) return;
+
     if (direction === "ArrowLeft"){
         currentX -= 5;
     }
@@ -24,6 +29,7 @@ function animate(direction){
 }
 
 document.addEventListener("keydown", (event) => {
+
     switch (event.key){
         case "ArrowLeft":
             if (!isAnimating){
@@ -54,12 +60,16 @@ document.addEventListener("keyup", (event) => {
 
 function dropClaw() {
     dropY = 0;
+    isDropping = true;
     const drop = () => {
         if (dropY >= 250) {
-            resetClaw();
+            reset(claw);
+            moveToy(toy);
+            isDropping = false;
+            isResetting = true;
             return;
         }
-        dropY += 2;
+        dropY += 8;
         claw.style.transform = `translate(${currentX}px, ${dropY}px)`;
         requestAnimationFrame(drop);
     };
@@ -67,33 +77,57 @@ function dropClaw() {
     requestAnimationFrame(drop);
 }
 
-function resetClaw() {
+function reset(element) {
     const lift = () => {
         if (dropY <= 0) {
             dropY = 0;
-            isDropping = false;
             requestAnimationFrame(moveLeft);
             return;
         }
         dropY -= 8;
-        claw.style.transform = `translate(${currentX}px, ${dropY}px)`;
+        element.style.transform = `translate(${currentX}px, ${dropY}px)`;
         requestAnimationFrame(lift);
-    };
+    }
 
     const moveLeft = () => {
         if (currentX <= 0) {
             currentX = 0;
-            claw.style.transform = `translate(${currentX}px, ${dropY}px)`;
+            isResetting = false;
             return;
         }
-        currentX -= 3;
-        claw.style.transform = `translate(${currentX}px, ${dropY}px)`;
+        currentX -= 5;
+        element.style.transform = `translate(${currentX}px, ${dropY}px)`;
         requestAnimationFrame(moveLeft)
     }
     requestAnimationFrame(lift)
 }
 
+let toyX = 300;
+let toyY = 340;
 
-function clawGrabToy(){
-    return false;
+function updateToyPosition(){
+    toy.style.transform = `translate(${toyX}px, ${toyY}px`;
+}
+
+function moveToy(element){
+
+    const lift = () => {
+        if(toyY <= 130){
+            requestAnimationFrame(moveLeft);
+            return;
+        }
+        toyY -= 8;
+        element.style.transform = `translate(${toyX}px, ${toyY}px)`
+        requestAnimationFrame(lift);
+    };
+
+    const moveLeft = () => {
+        if(toyX <= 70){
+            return;
+        }
+        toyX -=5;
+        element.style.transform = `translate(${toyX}px,${toyY}px)`
+        requestAnimationFrame(moveLeft);
+    }
+    requestAnimationFrame(lift);
 }
