@@ -1,26 +1,27 @@
 const claw = document.getElementById("claw");
 const toy = document.getElementById("toy");
-let currentX = 0;
 let isDropping= false;
 let isAnimating = false;
-let dropY = 0;
 let isResetting = false;
+let clawX = 50;
+let clawY = -400;
+
 
 function animate(direction){
     if(isResetting) return;
     if(isDropping) return;
 
     if (direction === "ArrowLeft"){
-        currentX -= 5;
+        clawX -= 5;
     }
     else if (direction === "ArrowRight"){
-        currentX += 5;
+        clawX += 5;
     }
     else if (direction === " "){
         dropClaw(claw);
         return;
     }
-    claw.style.transform = `translateX(${currentX}px)`;
+    claw.style.transform = `translate(${clawX}px,${clawY}px)`;
     if (isAnimating){
         requestAnimationFrame(()=>{
             animate(direction);
@@ -59,18 +60,17 @@ document.addEventListener("keyup", (event) => {
 });
 
 function dropClaw() {
-    dropY = 0;
     isDropping = true;
     const drop = () => {
-        if (dropY >= 250) {
+        if (clawY >= -160) {
             reset(claw);
             moveToy(toy);
             isDropping = false;
             isResetting = true;
             return;
         }
-        dropY += 8;
-        claw.style.transform = `translate(${currentX}px, ${dropY}px)`;
+        clawY += 8;
+        claw.style.transform = `translate(${clawX}px, ${clawY}px)`;
         requestAnimationFrame(drop);
     };
 
@@ -79,35 +79,32 @@ function dropClaw() {
 
 function reset(element) {
     const lift = () => {
-        if (dropY <= 0) {
-            dropY = 0;
+        if (clawY <= -400) {
             requestAnimationFrame(moveLeft);
             return;
         }
-        dropY -= 8;
-        element.style.transform = `translate(${currentX}px, ${dropY}px)`;
+        clawY -= 8;
+        element.style.transform = `translate(${clawX}px, ${clawY}px)`;
         requestAnimationFrame(lift);
     }
 
     const moveLeft = () => {
-        if (currentX <= 0) {
-            currentX = 0;
+        if (clawX <= 70) {
             isResetting = false;
             return;
         }
-        currentX -= 5;
-        element.style.transform = `translate(${currentX}px, ${dropY}px)`;
+        clawX -= 5;
+        element.style.transform = `translate(${clawX}px, ${clawY}px)`;
         requestAnimationFrame(moveLeft)
     }
     requestAnimationFrame(lift)
 }
 
+
+
+// toy logic
 let toyX = 300;
 let toyY = 340;
-
-function updateToyPosition(){
-    toy.style.transform = `translate(${toyX}px, ${toyY}px`;
-}
 
 function moveToy(element){
 
@@ -117,17 +114,32 @@ function moveToy(element){
             return;
         }
         toyY -= 8;
-        element.style.transform = `translate(${toyX}px, ${toyY}px)`
+        element.style.transform = `translate(${toyX}px,${toyY}px)`
         requestAnimationFrame(lift);
     };
 
     const moveLeft = () => {
         if(toyX <= 70){
+            requestAnimationFrame(pickupPrize);
             return;
         }
-        toyX -=5;
+        toyX -= 5;
         element.style.transform = `translate(${toyX}px,${toyY}px)`
         requestAnimationFrame(moveLeft);
     }
+
+    const pickupPrize = () => {
+        if(toyY >= 340){
+            toy.style.display = "none";
+            toyY += 165;
+            toy.style.transform = `translate(${toyX}px,${toyY}px)`
+            toy.style.display = "block";
+            return;
+        }
+        toyY += 5;
+        element.style.transform = `translate(${toyX}px,${toyY}px)`
+        requestAnimationFrame(pickupPrize);
+    }
+
     requestAnimationFrame(lift);
 }
