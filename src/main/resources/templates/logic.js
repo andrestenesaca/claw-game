@@ -1,10 +1,13 @@
 const claw = document.getElementById("claw");
 const toy = document.getElementById("toy");
+const clock = document.getElementById("timer");
 let isDropping= false;
 let isAnimating = false;
 let isResetting = false;
 let clawX = 50;
 let clawY = -400;
+let activeGame = true;
+let timerOn = true;
 
 
 function animate(direction){
@@ -30,7 +33,10 @@ function animate(direction){
 }
 
 document.addEventListener("keydown", (event) => {
-
+    if(timerOn){
+        timer();
+        timerOn = false;
+    }
     switch (event.key){
         case "ArrowLeft":
             if (!isAnimating){
@@ -100,8 +106,6 @@ function reset(element) {
     requestAnimationFrame(lift)
 }
 
-
-
 // toy logic
 let toyX = 300;
 let toyY = 340;
@@ -134,6 +138,7 @@ function moveToy(element){
             toyY += 165;
             toy.style.transform = `translate(${toyX}px,${toyY}px)`
             toy.style.display = "block";
+            activeGame = false;
             return;
         }
         toyY += 5;
@@ -142,4 +147,26 @@ function moveToy(element){
     }
 
     requestAnimationFrame(lift);
+}
+
+// timer logic
+
+function timer(){
+    let seconds = 8;
+    const countdown = setInterval(()=> {
+        if(seconds <= 0){
+            clearInterval(countdown);
+            clock.textContent = "Time's Up!";
+            clock.style.fontSize = "15px";
+        }
+        else if(!activeGame){
+            clearInterval(countdown);
+            clock.textContent = "WINNER!";
+            clock.style.fontSize = "18px";
+        }
+        else {
+            clock.textContent = "0:0" + seconds.toString();
+        }
+        seconds--;
+    },1000);
 }
